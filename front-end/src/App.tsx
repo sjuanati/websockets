@@ -51,7 +51,7 @@ const App = () => {
 		ws.send(JSON.stringify({
 			publicId: publicId,
 			action: 'send to all',
-			message: message,
+			message: '',
 		}));
 	};
 
