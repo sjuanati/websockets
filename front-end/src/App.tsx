@@ -7,23 +7,24 @@ const ws = new W3CWebSocket('ws://127.0.0.1:8000');
 const App = () => {
 	const [message, setMessage] = React.useState<string>('');
 	const [publicId, setPublicId] = React.useState<string>('');
+	const [messageReceived, setMessageReceived] = React.useState<string>('');
 
 	React.useEffect(() => {
 
 		ws.onopen = () => {
 			console.log('WebSocket Client Connected');
 			ws.onmessage = (msg: any) => {
-				const dataFromServer = JSON.parse(msg.data)
-				console.log('msg: ', msg);
-				console.log('msg parsed: ', dataFromServer);
+				const dataFromServer = JSON.parse(msg.data);
+				console.log('msg received: ', dataFromServer);
+				setMessageReceived(dataFromServer.output);
 			};
 
-			// Send ID number;
-			ws.send(JSON.stringify({
-				publicId: Math.floor(Math.random() * 1000),
-				action: 'ping',
-				message: 'Hello',
-			}));
+			// Send ID number when loading the page for the 1st time
+			// ws.send(JSON.stringify({
+			// 	publicId: Math.floor(Math.random() * 1000),
+			// 	action: 'ping',
+			// 	message: 'Hello',
+			// }));
 		};
 		return () => ws.close();
 	}, []);
@@ -48,7 +49,7 @@ const App = () => {
 
 	const handleSendDataAll = () => {
 		ws.send(JSON.stringify({
-			publicId: '',
+			publicId: publicId,
 			action: 'send to all',
 			message: message,
 		}));
@@ -97,6 +98,15 @@ const App = () => {
 						onClick={handleSendDataAll}>
 						Send data to ALL
                     </button>
+				</div>
+			</div>
+
+			<div className={'item'}>
+				<div className={'description'}>
+					Msg received:
+				</div>
+				<div>
+					{messageReceived}
 				</div>
 			</div>
 

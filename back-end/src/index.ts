@@ -29,28 +29,30 @@ wsServer.on('request', (request: any) => {
                 id = publicId;
                 console.log(`Message received`);
 
-                // Store connection message
+                // Store connection
                 if (action === 'ping') {
                     users.set(publicId, connection);
                 };
 
-                // Send data only to user passes number 5
+                // Send data only to user
                 if (action === 'send to me') {
                     (users.get(publicId))
                         ? users.get(publicId).sendUTF(JSON.stringify({
-                            field: 'only you!',
+                            output: message,
                         }))
                         : null;
                 };
 
-                // Send to all users
+                // Send data to all users
                 if (action === 'send to all') {
+                    let i = 0;
                     for (let conn of users.values()) {
                         conn.sendUTF(JSON.stringify({
-                            field: 'Global communication',
+                            outout: `Global comm ${i}`,
                         }));
-                    }
-                }
+                        i++;
+                    };
+                };
             };
 
         } catch (err) {
